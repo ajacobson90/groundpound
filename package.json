@@ -1,0 +1,30 @@
+{
+  "name": "groundpound",
+  "version": "1.0.0",
+  "description": "Builds dynamic web pages by creating MVVM models based on any html rendered server-side",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rollup src/groundpound.js -o groundpound.js -f cjs",
+	"build-babel": "rollup -c"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ajacobson90/groundpound.git"
+  },
+  "author": "Alex Jacobson",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ajacobson90/groundpound/issues"
+  },
+  "homepage": "https://github.com/ajacobson90/groundpound#readme",
+  "devDependencies": {
+    "@babel/cli": "^7.19.3",
+    "@babel/core": "^7.20.2",
+    "@babel/preset-env": "^7.20.2",
+    "@rollup/plugin-babel": "^6.0.3",
+    "@rollup/plugin-node-resolve": "^15.0.1",
+    "rollup": "^3.4.0"
+  },
+  "type": "module"
+}
