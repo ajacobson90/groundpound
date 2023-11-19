@@ -15,7 +15,7 @@ export default class Observable{
 	
 	bindNode(node){
 		var self = this;
-		if (node.dataset.vfield){
+		if (node.dataset.gpField){
 			node.addEventListener('change', function(event){
 				self.set(event.target.value);
 			});

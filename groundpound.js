@@ -17,7 +17,7 @@ class Observable{
 	
 	bindNode(node){
 		var self = this;
-		if (node.dataset.vfield){
+		if (node.dataset.gpField){
 			node.addEventListener('change', function(event){
 				self.set(event.target.value);
 			});
@@ -58,11 +58,14 @@ class List {
 	}
 	
 	#populateNode(node, dataSource){
-		if (node.attributes && node.dataset.vtext && dataSource[node.dataset.vtext]){
-			node.innerText = dataSource[node.dataset.vtext].value;
+		if (node.attributes && node.dataset.gpText && dataSource[node.dataset.gpText]){
+			if (dataSource[node.dataset.gpText].constructor && dataSource[node.dataset.gpText].constructor.name === "Observable")
+				node.innerText = dataSource[node.dataset.gpText].value;
+			else
+				node.innerText = dataSource[node.dataset.gpText];
 		}
-		if (node.attributes && node.dataset.vclick && this.ctx[node.dataset.vclick]){
-			node.onclick = (function(){this.ctx[node.dataset.vclick](dataSource);}).bind(this);
+		if (node.attributes && node.dataset.gpClick && this.ctx[node.dataset.gpClick]){
+			node.onclick = (function(){this.ctx[node.dataset.gpClick](dataSource);}).bind(this);
 		}
 		
 		for (var i = 0; i < node.children.length; i++){
@@ -110,22 +113,24 @@ class ViewModel {
 	
 	#buildModel(node, assignmentObj){
 		var list = null;
-		if (node.attributes && node.dataset.vtext){
-			if (!assignmentObj[node.dataset.vtext])
-				assignmentObj[node.dataset.vtext] = new Observable(node.innerText, this.#runWithoutMutator.bind(this));
-			assignmentObj[node.dataset.vtext].bindNode(node);
-		}
-		if (node.attributes && node.dataset.vfield){
-			if (!assignmentObj[node.dataset.vfield])
-				assignmentObj[node.dataset.vfield] = new Observable(node.value, this.#runWithoutMutator.bind(this));
-			assignmentObj[node.dataset.vfield].bindNode(node);
-		}
-		if (node.attributes && node.dataset.vclick){
-			node.onclick = (function(){this[node.dataset.vclick](assignmentObj);}).bind(this);
-		}
-		if (node.attributes && node.dataset.vlist){
-			list = new List([], node, assignmentObj, this.#runWithoutMutator.bind(this));
-			assignmentObj[node.dataset.vlist] = list;
+		if (node.attributes){
+			if (node.dataset.gpText){
+				if (!assignmentObj[node.dataset.gpText])
+					assignmentObj[node.dataset.gpText] = this.buildObservable(node.innerText);
+				assignmentObj[node.dataset.gpText].bindNode(node);
+			}
+			if (node.dataset.gpField){
+				if (!assignmentObj[node.dataset.gpField])
+					assignmentObj[node.dataset.gpField] = this.buildObservable(node.innerText);
+				assignmentObj[node.dataset.gpField].bindNode(node);
+			}
+			if (node.dataset.gpClick){
+				node.onclick = (function(){this[node.dataset.gpClick](assignmentObj);}).bind(this);
+			}
+			if (node.dataset.gpList){
+				list = new List([], node, assignmentObj, this.#runWithoutMutator.bind(this));
+				assignmentObj[node.dataset.gpList] = list;
+			}
 		}
 		
 		for (var i = 0; i < node.children.length; i++){

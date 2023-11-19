@@ -27,11 +27,14 @@ export default class List {
 	}
 	
 	#populateNode(node, dataSource){
-		if (node.attributes && node.dataset.vtext && dataSource[node.dataset.vtext]){
-			node.innerText = dataSource[node.dataset.vtext].value;
+		if (node.attributes && node.dataset.gpText && dataSource[node.dataset.gpText]){
+			if (dataSource[node.dataset.gpText].constructor && dataSource[node.dataset.gpText].constructor.name === "Observable")
+				node.innerText = dataSource[node.dataset.gpText].value;
+			else
+				node.innerText = dataSource[node.dataset.gpText];
 		}
-		if (node.attributes && node.dataset.vclick && this.ctx[node.dataset.vclick]){
-			node.onclick = (function(){this.ctx[node.dataset.vclick](dataSource);}).bind(this);
+		if (node.attributes && node.dataset.gpClick && this.ctx[node.dataset.gpClick]){
+			node.onclick = (function(){this.ctx[node.dataset.gpClick](dataSource);}).bind(this);
 		}
 		
 		for (var i = 0; i < node.children.length; i++){
